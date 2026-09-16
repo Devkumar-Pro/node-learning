@@ -1,71 +1,30 @@
-const validateCreateUser = (req, res, next) => {
-    const { name } = req.body;
-
+const validateUserName = (name) => {
     if (name === undefined) {
-        return res.status(400).json({
-            message: 'Name is required',
-            data: null
-        });
+        throw new Error('Name is required');
     }
 
     if (typeof name !== 'string') {
-        return res.status(400).json({
-            message: 'Name must be a string',
-            data: null
-        });
+        throw new Error('Name must be a string');
     }
 
     if (!name.trim()) {
-        return res.status(400).json({
-            message: 'Name cannot be empty',
-            data: null
-        });
+        throw new Error('Name cannot be empty');
     }
 
-    next();
+    return name.trim();
 };
 
-const validateUserId = (req, res, next) => {
-    const userId = Number(req.params.id);
+const validateUserId = (id) => {
+    const userId = Number(id);
 
     if (!Number.isInteger(userId) || userId <= 0) {
-        return res.status(400).json({
-            message: 'Invalid user id',
-            data: null
-        });
+        throw new Error('Invalid user id');
     }
 
-    next();
-};
-
-const validateUpdateUser = (req, res, next) => {
-    const { name } = req.body;
-
-    // PATCH allows partial updates,
-    // so name can be omitted.
-    if (name === undefined) {
-        return next();
-    }
-
-    if (typeof name !== 'string') {
-        return res.status(400).json({
-            message: 'Name must be a string',
-            data: null
-        });
-    }
-
-    if (!name.trim()) {
-        return res.status(400).json({
-            message: 'Name cannot be empty',
-            data: null
-        });
-    }
-
-    next();
+    return userId;
 };
 
 module.exports = {
-    validateCreateUser,
-    validateUserId,
-    validateUpdateUser
+    validateUserName,
+    validateUserId
 };

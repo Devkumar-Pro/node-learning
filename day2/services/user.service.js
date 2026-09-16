@@ -1,16 +1,13 @@
 const users = require('../data/users');
 const ApiError = require('../utils/ApiError');
+const { validateUserId, validateUserName } = require('../validators/user.validator');
 
 const getUsers = () => {
     return users;
 };
 
 const getUserById = (id) => {
-    const userId = Number(id);
-
-    if (!Number.isInteger(userId)) {
-        throw new ApiError(400, 'Invalid id');
-    }
+    const userId = validateUserId(id);
 
     const user = users.find(
         (item) => item.id === userId
@@ -23,12 +20,15 @@ const getUserById = (id) => {
     return user;
 };
 
+
 const createUser = (data) => {
+    const name = validateUserName(data.name);
+
     const user = {
         id: users.length
             ? users[users.length - 1].id + 1
             : 1,
-        name: data.name
+        name
     };
 
     users.push(user);
